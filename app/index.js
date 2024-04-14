@@ -90,7 +90,7 @@ app.post('/submit', (req, res) => {
   const email = req.body.email;
 
   // Prepare SQL query with placeholders
-  const sql = `INSERT INTO trynode (name, email) VALUES (?, ?)`;
+  const sql = `INSERT INTO customer (name, email) VALUES (?, ?)`;
 
   // Execute query using separate function (db.js)
   executeQuery(sql, [name, email], (err, result) => {
@@ -108,7 +108,7 @@ app.post('/submit', (req, res) => {
 
 // Route to retrieve all data
 app.get('/data', (req, res) => {
-    const sql = `SELECT * FROM trynode`;  // Adjust query to select specific data
+    const sql = `SELECT * FROM customer`;  // Adjust query to select specific data
   
     executeQuery(sql, [], (err, data) => {
       if (err) {
