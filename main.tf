@@ -109,7 +109,7 @@ module "ec2_instances" {
   instance_type             = var.instance_type
   subnet_id_public          = module.vpc.public_subnets[0]
   security_group_id_webtier = [aws_security_group.webtier.id]
-  secretARN                 = module.zeus_secrets_manager.secretARN
+  secretARN                 = module.secrets_manager_rds.secretARN
   kms_key_id                = module.zeus_kms.kms_key_id
   tags                      = var.vpc_tags
 }
@@ -121,20 +121,13 @@ module "zeus_kms" {
 
 }
 
-module "zeus_secrets_manager" {
-  source = "./modules/secrets_manager"
+module "secrets_manager_rds" {
+  source = "./modules/secrets_manager-rds"
 
   tags       = var.vpc_tags
   kms_key_id = module.zeus_kms.kms_key_id
-
-}
-
-module "rds_mysql" {
-  source = "./modules/rds-mysql"
-
   security_group_id_dbtier = module.dbtier_security_group.security_group_id
   subnet_id_private        = module.vpc.private_subnets
-  secret_string            = module.zeus_secrets_manager.secret_string
-  tags = var.vpc_tags
+
 
 }
