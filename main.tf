@@ -103,6 +103,36 @@ module "dbtier_security_group" {
   tags = var.vpc_tags
 }
 
+# Security Group for Secrets Manager Interface Endpoint
+
+module "secretsmanager_endpoint_sg" {
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "~> 4.13.1"  # Use the latest compatible version
+
+  name        = "secretsmanager-endpoint-sg"
+  description = "Security group for Secrets Manager VPC endpoint"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress_rules = [
+    {
+      id          = "https-from-ec2"
+      description = "Allow HTTPS from EC2 instance"
+      from_port   = 443
+      to_port     = 443
+      protocol    = "tcp"
+      source_security_group_id = aws_security_group.webtier.id
+    }
+  ]
+
+  # No egress rules needed for the endpoint, as it doesn't initiate connections
+  egress_rules = []
+
+  tags = {
+    Name = "secretsmanager-endpoint-sg"
+  }
+}
+
+
 module "ec2_instances" {
   source = "./modules/aws-instance"
 
@@ -136,5 +166,15 @@ module "rds_mysql" {
   subnet_id_private        = module.vpc.private_subnets
   secret_string            = module.zeus_secrets_manager.secret_string
   tags = var.vpc_tags
+
+}
+
+module "vpc_endpoints"{
+  source = "./modules/vpc_endpoints"
+
+region            = var.aws_region
+vpc_id            = module.vpc.vpc_id
+subnet_ids        = module.vpc.public_subnets
+vpc_endpoint_sg_id= module.secretsmanager_endpoint_sg.security_group_id
 
 }

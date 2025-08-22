@@ -1,4 +1,4 @@
-# Deploying a secure Two-tier Infrastructure With High Availability (Includes the use nodejs app to retrieve the database password from secrets manager using IAM role)
+# Deploying a secure Two-tier web Infrastructure (Includes the use nodejs app to retrieve the database password from secrets manager using IAM role)
 
 This is an example Terraform configuration the allows the deployment of a two-tier web architecture on AWS.
 
@@ -16,17 +16,21 @@ Two private subnets in two availability zones
 
 Route tables
 
-Security group for our app instance in the public subnet
+Security group for our web-tier instance in the public subnet
 
 Security group for our database in the private subnet
 
-ssh key for our app instance
+Security group for VPC Interface endpoint for secrets manager
+
+ssh key for our web-tier instance
 
 ec2 instance profile with ec2 role containing policy for actions on secrets manager
 
 secrets manager secret
 
 secrets manager secret version
+
+VPC Interface endpoint
 
 random password
 
