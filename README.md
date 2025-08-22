@@ -37,3 +37,5 @@ random password
 kms key and policy
 
 RDS - MySQL instance
+
+![2-tier](2-tier.png)
